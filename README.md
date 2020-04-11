@@ -19,3 +19,36 @@ make
 ```
 
 or you can use another compiler as you wish.
+
+# Options
+
+Some new options were added in version 1.2:
+
+## make options
+
+Make now includes two new options:
+
+A debug version of the shell that does only a single execution of:
+```
+ls -lah
+```
+or reads from a file like:
+```
+protsh cmd
+```
+to compile run:
+```
+make debug
+```
+Another option is the install one:
+```
+sudo make install
+```
+this is going to install the binary in the $PATH, still it is not recommended as protsh is not an useful shell
+
+## protsh options
+
+It was mentioned above but for the sake of completeness, protsh if compiled with debug mode can read its commands from a file
+```
+protsh cmdfile
+```
