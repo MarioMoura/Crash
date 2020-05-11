@@ -1,3 +1,13 @@
+# 2.0 (May 11 2020)
+
+- A complete overhaul and remake
+- Pipe Implemented
+- Cd implemented
+- Redirect & Append implemented
+- Manual PATH management 
+- readline library added
+- Simplified Makefile
+
 # 1.2 (April 10 2020)
 
 - Debug mode added
