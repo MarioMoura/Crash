@@ -5,18 +5,18 @@
 #include <sys/wait.h>
 
 int main(){
-	char *cmd = "ls";
-	char *args[] = {"","-l", NULL };
-	int out = 0;
+	char *cmd = "sed";
+	char *args[] = {"","", NULL };
+	int in = 0;
 	char *path = "out.txt";
 
-	out = open(path, (O_WRONLY | O_CREAT|O_TRUNC), 0644);
-	if(out == -1)
-		exit(-1);
+	in = open(path, (O_RDONLY ));
+	if(in == -1)
+		exit(10);
 
 	if( fork() == 0 ){
 		
-		dup2(out,fileno(stdout));
+		dup2(in,fileno(stdin));
 		execvp(cmd, args);
 		puts("error");
 		exit(1);

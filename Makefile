@@ -1,23 +1,37 @@
-# Compiler
-CC = gcc
-# Program files
-FILES= main.c
-# Other flags
-FLAGS=
-# Output flags
-OFLAGS= -o
-# Out file
-OUTF=protsh
-# Debug flags
-DBGFLAGS= -D DEBUG=1
-# Debug files
-DBGF=$(FILES)
+# To alter the PATH default behavior, INTERN_PATH 
+# must be set like the line below 
 
-all:
-	$(CC) $(FILES) $(OFLAGS) $(OUTF) 
-debug:
-	$(CC) $(DBGF) $(DBGFLAGS) $(OFLAGS) $(OUTF)
-install:
-	install -m 0755 $(OUTF) /usr/bin/$(OUTF)
+
+#INTERN_PATH=/bin:/usr/bin 
+INTERN_PATH := $(shell echo $(PATH))
+
+PATH_MACRO= -DBASE_PATH=\"$(INTERN_PATH)\"
+
+CC=gcc
+CCFLAGS= -lreadline
+
+CCOPTFLAGS= -O3 -mtune=native
+CCDBGFLAGS= -Og -ggdb
+
+TARGET= crash
+
+SOURCES=$(wildcard src/*.c)
+
+.PHONY: clean all debug install
+
+all: $(TARGET)
+
+$(TARGET): $(SOURCES)
+	$(CC) $^ -o $@ $(CCFLAGS) $(PATH_MACRO) $(CCOPTFLAGS)
+
+debug: $(SOURCES)
+	$(CC) $^ -o $(TARGET) $(CCFLAGS) $(PATH_MACRO) $(CCDBGFLAGS)
+
 clean:
-	rm $(OUTF)
+	-rm $(TARGET)
+
+install: $(TARGET)
+	install -m 0755 $(TARGET) /usr/bin/$(TARGET)
+
+uninstall:
+	rm /usr/bin/$(TARGET)
