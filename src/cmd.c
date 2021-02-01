@@ -5,6 +5,7 @@
 
 #include "array.h"
 #include "cmd.h"
+#include "util.h"
 
 
 
@@ -34,21 +35,6 @@ static unsigned long int cmd_count_pipes( char *input ){
 	}
 	return count;
 }
-
-/* 
- * Simply check is a string is either
- * filled with white spaces or just 
- * empty
- *
- */
-static int is_null( char *str){
-	int sum = 0;
-	int i = -1;
-	while(str[++i] != '\0')
-		sum += (str[i] - ' ' ? 1 : 0); 
-	return !sum;
-}
-
 /* 
  * Check if the one of the pipe
  * members is empty

@@ -38,7 +38,7 @@ char *sh_get_prompt(){
 			strlen(usrname) + 
 			strlen(hname) + 
 			strlen(dirname));
-	sprintf(prompt, "[ Protsh %s@%s %s]$ ",usrname,hname,dirname);
+	sprintf(prompt, "[ Crash %s@%s %s]$ ",usrname,hname,dirname);
 
 	return prompt;
 }
@@ -50,14 +50,15 @@ char *sh_get_prompt(){
  */
 int sh_chdir( struct Cmd_Array *cmd_arr ){
 	char *path = cmd_arr->array[1];
-	if( path == NULL ){
-		puts("cd missing operand !");
+	if( path == NULL ){ // check if path is null
+		puts("Error cd: missing operand !");
 		return 0;
 	}
-	if( access( path, F_OK) == 0)
-		chdir( path );
-	else 
+	if(access( path, F_OK)){
+		printf("Error cd: \"%s\" No such directory\n",path);
 		return 0;
+	}
+	chdir( path );
 	return 1;
 }
 
@@ -73,7 +74,11 @@ char *sh_get_prog( struct Cmd_Array *cmd_arr ){
 	char *ret = NULL;
 
 	while( ptr = strsep( &base_path, ":")){
-		ret = malloc( strlen(ptr) + 1 + strlen(cmd_arr->array[0]) + 1 );
+		ret = malloc( 
+				strlen(ptr) +  	// path
+				1 +				// slash
+				strlen(cmd_arr->array[0]) + // progname
+				1 );			// null byte
 		sprintf(ret,"%s%s%s",ptr,"/",cmd_arr->array[0]);
 		if( access(ret, X_OK | F_OK ) == 0 ){
 			free( base_path_free );
@@ -98,13 +103,13 @@ int sh_exec_arr( struct Cmd_Array *cmd_arr ){
 	int ret_fork;
 	char *prog = sh_get_prog( cmd_arr );
 	if(prog == NULL){
-		puts("Program not found !");
+		printf("Program \"%s\" not found !\n",cmd_arr->array[0]);
 		return 0;
 	}
 	if((ret_fork = fork()) == -1)
 		return 0;
 	if(ret_fork == 0){
-		// child code
+		// Child Code
 		if( cmd_arr->fd_in != 0){
 			dup2(cmd_arr->fd_in, 0);
 		}
@@ -115,6 +120,7 @@ int sh_exec_arr( struct Cmd_Array *cmd_arr ){
 		puts("execve error");
 		return 0;
 	}else{
+		// Parent Code
 		wait(0);
 		free(prog);
 		return 1;

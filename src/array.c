@@ -5,22 +5,13 @@
 #include <unistd.h>
 
 #include "array.h"
+#include "util.h"
 
 // Syntax checking first !!!
 
 // TODO:
 //       the indirection function
 
-/*
- * check is str is empty or filled with spaces
- */
-static int is_null( char *str){
-	int sum = 0;
-	int i = -1;
-	while(str[++i] != '\0')
-		sum += (str[i] - ' ' ? 1 : 0); 
-	return !sum;
-}
 
 /*
  * check append syntax

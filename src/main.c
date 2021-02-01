@@ -16,6 +16,7 @@
 //      - Indirection Function
 //      - PATH alteration
 //      - semicolon syntax
+//      - Signal handlers
 //      - Background Functions ?
 //
 

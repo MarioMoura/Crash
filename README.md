@@ -1,6 +1,6 @@
-# Protsh
+# Crash - The Crashable Shell
 
-Protish is a humble unix shell tailored to be nothing more than educative.
+Crash is a humble unix shell tailored to be nothing more than educative.
 
 Feel free to use the code as you wish and ,if you think you can improve it, go for it!
 
@@ -22,11 +22,11 @@ or you can use another compiler as you wish.
 
 # Usage
 
-Protsh is inspired by a normal shell. The main difference is that pipes takes precedence. Like:
+Crash is inspired by a normal shell. The main difference is that pipes takes precedence. Like:
 ```
 echo testing > file | wc -c
 ```
-In a normal shell wc will produce an output of zero, but in Protsh the file will be created but empty.
+In a normal shell wc will produce an output of zero, but in Crash the file will be created but empty.
 
 # Options
 
