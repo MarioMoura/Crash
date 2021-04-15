@@ -5,7 +5,6 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-
 #include "array.h"
 #include "cmd.h"
 #include "shell.h"
@@ -18,13 +17,16 @@
 //      - semicolon syntax
 //      - Signal handlers
 //      - Background Functions ?
+//      - Jobs
+//      - Variables
+//      - Std err
 //
 
 int main(void){
 
 	struct Cmd cmd;
 
-	char cwd[1024];  
+	char cwd[1024];
 	while(1){
 
 		char *prompt = sh_get_prompt();

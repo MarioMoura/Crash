@@ -34,9 +34,9 @@ char *sh_get_prompt(){
 
 	usrname = getlogin();
 
-	prompt = malloc( 15 + 
-			strlen(usrname) + 
-			strlen(hname) + 
+	prompt = malloc( 15 +
+			strlen(usrname) +
+			strlen(hname) +
 			strlen(dirname));
 	sprintf(prompt, "[ Crash %s@%s %s]$ ",usrname,hname,dirname);
 
@@ -62,9 +62,9 @@ int sh_chdir( struct Cmd_Array *cmd_arr ){
 	return 1;
 }
 
-/* 
+/*
  * Return a malloc'd string that is a pathname to
- * an existing executable file whithin the PATH 
+ * an existing executable file whithin the PATH
  *
  */
 char *sh_get_prog( struct Cmd_Array *cmd_arr ){
@@ -74,7 +74,7 @@ char *sh_get_prog( struct Cmd_Array *cmd_arr ){
 	char *ret = NULL;
 
 	while( ptr = strsep( &base_path, ":")){
-		ret = malloc( 
+		ret = malloc(
 				strlen(ptr) +  	// path
 				1 +				// slash
 				strlen(cmd_arr->array[0]) + // progname
@@ -90,8 +90,8 @@ char *sh_get_prog( struct Cmd_Array *cmd_arr ){
 	return NULL;
 }
 
-/* 
- * Read a Cmd_Array, getting the command within the 
+/*
+ * Read a Cmd_Array, getting the command within the
  * path and executing it with the apropriate args
  *
  * -Fork
@@ -146,15 +146,15 @@ int sh_exec_cmd( struct Cmd *cmd ){
 	for(int i=0; i < loop; i++){
 		pipe(pipe_fd);
 
-		(cmd->cmd + i)->fd_in = in ; 
-		(cmd->cmd + i)->fd_out = pipe_fd[WRITE] ; 
+		(cmd->cmd + i)->fd_in = in ;
+		(cmd->cmd + i)->fd_out = pipe_fd[WRITE] ;
 		sh_exec_arr( cmd->cmd + i );
 
 		close(pipe_fd[WRITE]);
 		in = pipe_fd[READ];
 	}
 	if(in != 0)
-		(cmd->cmd + loop)->fd_in = in ; 
+		(cmd->cmd + loop)->fd_in = in ;
 	sh_exec_arr( cmd->cmd + loop );
 
 	dup2(in_save, 0);
