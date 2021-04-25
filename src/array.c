@@ -33,7 +33,7 @@ int check_append( struct Cmd_Array *cmd ){
 		if( !ptr ){
 			free( lcl_input_free );
 			return 0; // syntax error
-		} 
+		}
 		if( access(ptr, F_OK) == 0)
 			cmd->fd_out = open(ptr, (O_WRONLY | O_APPEND), 0644);
 		else
@@ -139,12 +139,12 @@ static void arr_mkarray(struct Cmd_Array *cmd){
 	while( (str_ptr = strtok( NULL ,  " ")) != NULL ){
 		cmd->array[ i++ ] = strdup(str_ptr);
 	}
-	
+
 	free( cmd->input );
 }
 
 /*
- * First frees each index of the array then 
+ * First frees each index of the array then
  * the array itself
  *
  */
@@ -194,19 +194,19 @@ int arr_show_stats(struct Cmd_Array *cmd){
  *
  * - parse the input append/redirection,
  *   removing that part of the string
- *  
- * - if the string means something, 
+ *
+ * - if the string means something,
  *   builds the array
  *
- */ 
+ */
 int arr_init(struct Cmd_Array *cmd, char *input){
 	cmd->fd_in = 0;
 	cmd->fd_out = 1;
 	cmd->input = strdup( input );
 	cmd-> array = NULL; // crucial protection against
-	                    // seg faults
+						// seg faults
 
-	
+
 	if( !arr_parse_out( cmd ) ){
 		free( cmd->input );
 		return 0;

@@ -135,7 +135,7 @@ int sh_exec_arr( struct Cmd_Array *cmd_arr ){
  * the pipes.
  *
  */
-int sh_exec_cmd( struct Cmd *cmd ){
+int sh_exec_cmd_internal( struct Cmd *cmd ){
 	int in_save  = dup(0);
 	int out_save = dup(1);
 	int pipe_fd[2];
@@ -161,3 +161,12 @@ int sh_exec_cmd( struct Cmd *cmd ){
 	dup2(out_save, 1);
 	return 1;
 }
+int sh_exec_cmd( struct Cmd **cmd ){
+	int index = 0;
+	while( cmd[index] != NULL)
+		sh_exec_cmd_internal(*cmd+index++);
+
+}
+
+
+

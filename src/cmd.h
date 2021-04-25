@@ -11,6 +11,6 @@ struct Cmd {
 	struct Cmd_Array *cmd;
 };
 
-int cmd_init( struct Cmd *cmd , char *input );
-int cmd_finish( struct Cmd *cmd );
+int cmd_init( struct Cmd **cmd , char *input );
+int cmd_finish( struct Cmd **cmd );
 #endif

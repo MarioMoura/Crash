@@ -24,7 +24,7 @@
 
 int main(void){
 
-	struct Cmd cmd;
+	struct Cmd *cmd;
 
 	char cwd[1024];
 	while(1){
@@ -35,20 +35,20 @@ int main(void){
 
 		cmd_init( &cmd , input );
 
-		if(cmd.cmd){
-			if(!strcmp(cmd.cmd->array[0],"exit")){
-				cmd_finish( &cmd );
-				free( input );
-				return 0;
-			}
-			if(!strcmp(cmd.cmd->array[0],"cd")){
-				sh_chdir( cmd.cmd );
-				cmd_finish( &cmd );
-				free( input );
-				continue;
-			}
+		if(cmd->cmd){
+			/*if(!strcmp(cmd.cmd->array[0],"exit")){*/
+				/*cmd_finish( &cmd );*/
+				/*free( input );*/
+				/*return 0;*/
+			/*}*/
+			/*if(!strcmp(cmd.cmd->array[0],"cd")){*/
+				/*sh_chdir( cmd.cmd );*/
+				/*cmd_finish( &cmd );*/
+				/*free( input );*/
+				/*continue;*/
+			/*}*/
 
-			sh_exec_cmd( &cmd );
+			/*sh_exec_cmd( &cmd );*/
 
 		}
 
