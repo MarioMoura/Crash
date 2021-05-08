@@ -161,10 +161,11 @@ int sh_exec_cmd_internal( struct Cmd *cmd ){
 	dup2(out_save, 1);
 	return 1;
 }
-int sh_exec_cmd( struct Cmd **cmd ){
+int sh_exec_cmd( struct Cmd ***cmd ){
 	int index = 0;
-	while( cmd[index] != NULL)
-		sh_exec_cmd_internal(*cmd+index++);
+	while( (*cmd)[index] != NULL){
+		sh_exec_cmd_internal((*cmd)[index++]);
+	}
 
 }
 

@@ -6,7 +6,7 @@
 #include "cmd.h"
 #include "util.h"
 
-
+unsigned int n_semicolons = 0;
 
 /*
  * Print the array of arrays
@@ -34,12 +34,23 @@ static unsigned long int cmd_count_pipes( char *input ){
 			count++;
 	return count;
 }
+/*
+ * Count the semicollons that are
+ * separators
+ */
 static unsigned long int cmd_count_semicolons( char *input ){
 	unsigned long int count = 0;
 	unsigned long int index = 0;
 	while( input[ index++ ] != '\0')
 		if( input[ index ] == ';' )
 			count++;
+
+	for (int i = strlen(input)-1; i >= 0; i--) {
+		if(input[i] != ' ' && input[i] != ';')
+			return count;
+		if(input[i] == ';')
+			return count-1;
+	}
 	return count;
 }
 /*
@@ -54,11 +65,35 @@ static int check_pipes( char *input ){
 	while( ptr = strsep( &str, "|")){
 		if(is_null(ptr)){
 			free( free_p );
-			return 0;
+			return 1;
 		}
 	}
 	free( free_p );
-	return 1;
+	return 0;
+}
+
+/*
+ * Check semicolon syntax
+ */
+int check_semicolon(char *input){
+	unsigned long int count = 0;
+	unsigned long int index = 0;
+	while( input[ index++ ] != '\0')
+		if( input[ index ] == ';' )
+			count++;
+
+	char *str = strdup(input);
+	char *free_p = str;
+	char *ptr;
+	for(int i = 0; i < count; i++){
+		ptr = strsep( &str, ";");
+			if(is_null(ptr)){
+				free( free_p );
+				return 1;
+			}
+	}
+	free( free_p );
+	return 0;
 }
 
 /*
@@ -84,7 +119,7 @@ int cmd_init_internal( struct Cmd *cmd , char *input ){
 
 	if( is_null( input ))
 		return 1;
-	if( !check_pipes( input ) ){
+	if( check_pipes( input ) ){
 		puts("Pipe Syntax error");
 		return 0;
 	}
@@ -101,7 +136,7 @@ int cmd_init_internal( struct Cmd *cmd , char *input ){
 	free( lcl_input_free );
 	return 1;
 }
-int cmd_init( struct Cmd **cmd , char *input ){
+int cmd_init( struct Cmd ***cmd , char *input ){
 
 	char *lcl_input;
 	char *lcl_input_free;
@@ -109,31 +144,29 @@ int cmd_init( struct Cmd **cmd , char *input ){
 
 	unsigned int index = 0;
 
-	if( is_null( input ))
+	*cmd = NULL;
+
+	if( is_null( input )) return 1;
+	if( check_semicolon( input )){
+		puts("Semicolon Syntax Error");
 		return 1;
+	}
 
 	lcl_input = strdup( input );
 	lcl_input_free = lcl_input ;
 
-	unsigned int n_semicolons = cmd_count_semicolons(input);
-	*cmd = malloc( sizeof(struct Cmd) * (n_semicolons + 1 + 1));
+	n_semicolons = cmd_count_semicolons(input);
+	unsigned int size = n_semicolons + 2;
 
-	cmd[n_semicolons+1] = NULL;
+	*cmd = malloc( sizeof(struct Cmd *) * (size)); // malloc *size* pointers
 
+	for (int i = 0; i < size-1; i++)
+		(*cmd)[i] = malloc(sizeof(struct Cmd));	// malloc each pointer but the last
 
-	/*cmd_init_internal( cmd[0] , "eae man");*/
-	/*cmd_print_arrays(cmd[0]);*/
-	while( arr_ptr = strsep( &lcl_input, ";")){
-		printf("%d\n", index);
-		cmd_init_internal( *cmd + index++ , arr_ptr );
-	}
-	index = 0;
-	while( cmd[index] != NULL)
-		cmd_print_arrays(*cmd+index++);
-	puts("-teste-");
-	for(int i = 0; i < n_semicolons + 1; i++){
-		cmd_print_arrays(*cmd+i);
-	}
+	(*cmd)[size-1] = NULL; // last pointer is nulled
+
+	while( arr_ptr = strsep( &lcl_input, ";"))
+		if( index < size-1 ) cmd_init_internal( (*cmd)[index++] , arr_ptr );
 
 	free( lcl_input_free );
 }
@@ -153,8 +186,10 @@ int cmd_finish_single( struct Cmd *cmd ){
 	free(cmd->cmd);
 	return 1;
 }
-int cmd_finish( struct Cmd **cmd ){
+int cmd_finish( struct Cmd ***cmd ){
+	if( (*cmd) == NULL ) return 1;
 	int index = 0;
-	while( cmd[index] != NULL)
-		cmd_finish_single(*cmd+index++);
+	while( (*cmd)[index] != NULL )
+		cmd_finish_single((*cmd)[index++]);
+	free(*cmd); // free the ponters
 }

@@ -14,7 +14,6 @@
 //
 //      - Indirection Function
 //      - PATH alteration
-//      - semicolon syntax
 //      - Signal handlers
 //      - Background Functions ?
 //      - Jobs
@@ -24,7 +23,7 @@
 
 int main(void){
 
-	struct Cmd *cmd;
+	struct Cmd **cmd;
 
 	char cwd[1024];
 	while(1){
@@ -35,7 +34,7 @@ int main(void){
 
 		cmd_init( &cmd , input );
 
-		if(cmd->cmd){
+		if(cmd != NULL){
 			/*if(!strcmp(cmd.cmd->array[0],"exit")){*/
 				/*cmd_finish( &cmd );*/
 				/*free( input );*/
@@ -48,7 +47,7 @@ int main(void){
 				/*continue;*/
 			/*}*/
 
-			/*sh_exec_cmd( &cmd );*/
+			sh_exec_cmd( &cmd );
 
 		}
 
