@@ -28,12 +28,13 @@ OBJECTS=$(addprefix $(BUILDDIR)/, $(notdir $(SOURCES:.c=.o)))
 
 .PHONY: clean all debug install
 
-all: $(TARGET)
+all: $(BUILDDIR) $(TARGET)
+	@echo Compilation done!
 
 $(BUILDDIR)/shell.o: $(SRCDIR)/shell.c $(SRCDIR)/shell.h
 	$(CC) $(CFLAGS) $(CCOPTFLAGS) $(PATH_MACRO) -c -o $@ $<
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.c $(BUILDDIR) $(HEADERS)
+$(BUILDDIR)/%.o: $(SRCDIR)/%.c  $(HEADERS)
 	$(CC) $(CFLAGS) $(CCOPTFLAGS) -c -o $@ $<
 
 $(BUILDDIR):
